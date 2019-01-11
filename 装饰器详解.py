@@ -1,17 +1,17 @@
 """详细介绍装饰器"""
-# 1.装饰器在不改变员代码的基础上添加功能
-# def log(func):
-#     def wrapper(*args, **kw):
-#         print('获取函数的名字 %s():' % func.__name__)
-#         return func(*args, **kw)
-#     return wrapper
+# 1.装饰器在不改变原代码的基础上添加功能
+def log(func):
+    def wrapper(*args, **kw):
+        print('获取函数的名字 %s():' % func.__name__)
+        return func(*args, **kw)
+    return wrapper
 
-# @log
-# def test(args):
-# 	print ('hello,%s' %args)
+@log
+def test(args):
+	print ('hello,%s' %args)
 
-# if __name__ == '__main__':
-# 	test("like")	
+if __name__ == '__main__':
+	test("like")	
 # 输出：
 # call test():
 # hello,like
@@ -19,20 +19,20 @@
 
 
 # 2.如果新的功能需要传参数
-# def log(text):
-# 	def decrocate(func):
-# 		print("功能需要的参数%s" %text)
-# 		def wrapper(*args, **kw):
-# 			print("获取函数的名字:%s" %func.__name__)
-# 			return func(*args, **kw)
-# 		return wrapper
-# 	return decrocate
-# @log("first")
-# def test(args):
-# 	print ('hello,%s' %args)
+def log(text):
+	def decrocate(func):
+		print("功能需要的参数%s" %text)
+		def wrapper(*args, **kw):
+			print("获取函数的名字:%s" %func.__name__)
+			return func(*args, **kw)
+		return wrapper
+	return decrocate
+@log("first")
+def test(args):
+	print ('hello,%s' %args)
 
-# if __name__ == '__main__':
-# 	test("like")
+if __name__ == '__main__':
+	test("like")
 
 # 输出：
 # 功能需要的参数first
@@ -43,29 +43,29 @@
 
 
 # 3.同时添加两个装饰器
-# def log1(func):
-#     def wrapper(*args, **kw):
-#         print('第一个装饰器')
-#         return func(*args, **kw)
-#     return wrapper
+def log1(func):
+    def wrapper(*args, **kw):
+        print('第一个装饰器')
+        return func(*args, **kw)
+    return wrapper
 
-# def log2(text):
-# 	def dec(func):
-# 		def wrap(*args, **kw):
-# 			print("第二个功能需要的参数%s" %text)	
-# 			print("第二个装饰器")
-# 			return func(*args, **kw)
-# 		return wrap
-# 	return dec
+def log2(text):
+	def dec(func):
+		def wrap(*args, **kw):
+			print("第二个功能需要的参数%s" %text)	
+			print("第二个装饰器")
+			return func(*args, **kw)
+		return wrap
+	return dec
 
-# @log2("first")
-# @log1
-# def test(args):
-# 	print ('hello,%s' %args)
+@log2("first")
+@log1
+def test(args):
+	print ('hello,%s' %args)
 
-# if __name__ == '__main__':
-# 	test("like")
-# print(test.__name__)
+if __name__ == '__main__':
+	test("like")
+print(test.__name__)
 
 # 输出：
 # 第二个功能需要的参数first
@@ -105,3 +105,29 @@ print(test.__name__)
 # call test():
 # hello,like
 # test
+
+
+# 5.装饰器还是可以给函数添加方法属性
+
+import functools
+
+def get(path):
+    """利用装饰器把"""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kw):
+            return func(*args, **kw)
+        wrapper.__method__ = 'GET'
+        wrapper.__route__ = path
+        return wrapper
+    return decorator
+@get('/')
+def test():
+    print(test__wrapper__,test.__method__, test.__route__)
+
+test()
+
+#输出:
+#<function test at 0x03220CD8> 
+#GET
+# /
