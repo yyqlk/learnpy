@@ -36,7 +36,7 @@ class ModelMetaclass(type):
             attrs.pop(k)
         attrs['__mappings__'] = mappings
         attrs['__table__' ]= name
-        return type.__new__(cls, name, bases, attrs) #这句话是干什么用的？
+        return type.__new__(cls, name, bases, attrs) # 返回这句话就是用type动态的创建类了
 
 
 class Model(dict, metaclass=ModelMetaclass):      #编写基类用来定义子类的基本方法
@@ -77,5 +77,15 @@ u = User(id=12345, name='Michael', email='test@orm.org', password='my-pwd')
 
 # 保存到数据库：
 u.save()
+
+
+# 输出
+# found model:User
+# found mappings:id==><IntegerField:id>
+# found mappings:name==><StringField:username>
+# found mappings:email==><StringField:email>
+# found mappings:password==><StringField:password>
+# sql:insert into User(id,username,email,password) values (?,?,?,?)
+# args: [12345, 'Michael', 'test@orm.org', 'my-pwd']
 
 
